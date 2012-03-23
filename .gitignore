@@ -76,4 +76,8 @@ GTAGS
 
 *.orig
 *~
+
+# other files
+cp.sh
+defconfig.sh
 \#*#
