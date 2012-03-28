@@ -271,7 +271,6 @@ void cpufreq_notify_transition(struct cpufreq_freqs *freqs, unsigned int state)
 		pr_debug("FREQ: %lu - CPU: %lu", (unsigned long)freqs->new,
 			(unsigned long)freqs->cpu);
 		trace_power_frequency(POWER_PSTATE, freqs->new, freqs->cpu);
-		trace_cpu_frequency(freqs->new, freqs->cpu);
 		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
 				CPUFREQ_POSTCHANGE, freqs);
 		if (likely(policy) && likely(policy->cpu == freqs->cpu))
@@ -1118,16 +1117,14 @@ static int __cpufreq_remove_dev(struct sys_device *sys_dev)
 	 * not referenced anymore by anybody before we proceed with
 	 * unloading.
 	 */
-	dprintk("waiting for dropping of refcount\n");
+	pr_debug("waiting for dropping of refcount\n");
 	wait_for_completion(cmp);
-	dprintk("wait complete\n");
+	pr_debug("wait complete\n");
 
 	lock_policy_rwsem_write(cpu);
 	if (cpufreq_driver->exit)
 		cpufreq_driver->exit(data);
 	unlock_policy_rwsem_write(cpu);
-
-	cpufreq_debug_enable_ratelimit();
 
 #ifdef CONFIG_HOTPLUG_CPU
 	/* when the CPU which is the parent of the kobj is hotplugged

@@ -22,3 +22,6 @@ msm_kgsl-$(CONFIG_MSM_KGSL_DRM) += kgsl_drm.o
 msm_kgsl-objs = $(msm_kgsl-y)
 
 obj-$(CONFIG_MSM_KGSL) += msm_kgsl.o
+
+# Ignore warnings to prevent build breaks when using gcc 4.5.0
+CFLAGS_REMOVE_kgsl_log.o = -Werror
