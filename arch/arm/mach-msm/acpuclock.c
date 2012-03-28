@@ -17,6 +17,8 @@
  *
  */
 
+#define OVERCLOCK_AHB
+
 #include <linux/version.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
@@ -219,7 +221,6 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_1200[] = {
 	{ 1, 768000, ACPU_PLL_0, 4, 0, 384000, 1, 7, 384600 },
 	{ 1, 787200, ACPU_PLL_0, 4, 0, 393600, 1, 7, 393600 },
 	{ 1, 806400, ACPU_PLL_0, 4, 0, 403200, 1, 7, 403200 },
-#endif
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
 
@@ -440,6 +441,21 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 	/* CLK_SEL_SRC1NO */
 	src_sel = reg_clksel & 1;
 
+	// Perform overclocking if requested
+	if(hunt_s->pll==0 && hunt_s->a11clk_khz>600000) {
+		// Change the speed of PLL0
+		writel(hunt_s->a11clk_khz/19200, PLLn_L_VAL(0));
+		udelay(50);
+	}
+
+#ifdef OVERCLOCK_AHB
+	// Pump the PLL2 up another 19200kHz (overclock stock 600MHz from 595.2MHz to 604.8MHz)
+	if(hunt_s->pll==2 && hunt_s->a11clk_khz==600000) {
+		writel(63, PLLn_L_VAL(2));
+		udelay(50);
+	}
+#endif
+
 	/*
 	 * If the new clock divider is higher than the previous, then
 	 * program the divider before switching the clock
@@ -459,6 +475,13 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 	/* Program clock source selection */
 	reg_clksel ^= 1;
 	writel(reg_clksel, A11S_CLK_SEL_ADDR);
+
+	// Recover from overclocking
+	//if(hunt_s->pll==0 && hunt_s->a11clk_khz<=600000) {
+		// Restore the speed of PLL0
+	//	writel(50, PLLn_L_VAL(0));
+	//	udelay(50);
+	//}
 
 	/*
 	 * If the new clock divider is lower than the previous, then
