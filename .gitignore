@@ -80,5 +80,5 @@ GTAGS
 
 # other files
 cp.sh
-defconfig.sh
+def.sh
 \#*#

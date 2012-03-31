@@ -66,6 +66,7 @@ unsigned crci_mask;
 #define FLASH_READ_ONFI_PARAMETERS_ADDRESS 0x00
 
 #define VERBOSE 0
+
 #pragma GCC diagnostic ignored "-Wuninitialized"
 
 struct msm_nand_chip {

@@ -192,6 +192,7 @@ export KBUILD_BUILDHOST := $(SUBARCH)
 ARCH		?= $(SUBARCH)
 # CROSS_COMPILE	?= arm-eabi-
 CROSS_COMPILE	?= /home/thachtunganh/android/toolchains/android-ndk-r7b/toolchains/arm-linux-androideabi-4.4.3/prebuilt/linux-x86/bin/arm-linux-androideabi-
+# CROSS_COMPILE	?= /home/thachtunganh/android/toolchains/arm-eabi-4.4.3/bin/arm-eabi-
 CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
 
 # Architecture as present in compile.h
