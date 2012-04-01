@@ -67,8 +67,6 @@ unsigned crci_mask;
 
 #define VERBOSE 0
 
-#pragma GCC diagnostic ignored "-Wuninitialized"
-
 struct msm_nand_chip {
 	struct device *dev;
 	wait_queue_head_t wait_queue;
