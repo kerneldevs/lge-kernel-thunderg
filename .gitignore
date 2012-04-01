@@ -81,4 +81,6 @@ GTAGS
 # other files
 cp.sh
 def.sh
+scripts/basic
+scripts/kconfig
 \#*#
